@@ -174,6 +174,13 @@ Linux & Bash are used for CLI interaction and system-level control.
 
 ---
 
+
+<div align="center">
+
+<img src="![1000408649](https://github.com/user-attachments/assets/7c050b0a-e785-4f00-88bf-60cf2501c3cf)
+"/>
+
+
 ## 📦 Installation
 
 ### 🔹 Linux / macOS
@@ -226,11 +233,6 @@ Returns real-time traffic statistics and detected anomalies.
 
 
 
-
-<div align="center">
-
-<img src="![1000408649](https://github.com/user-attachments/assets/7c050b0a-e785-4f00-88bf-60cf2501c3cf)
-"/>
 
 
 
