@@ -1,0 +1,90 @@
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+let labels = [];
+let requestsData = [];
+let attacksData = [];
+
+const ctx = document.createElement('canvas');
+document.body.appendChild(ctx);
+
+const chart = new Chart(ctx, {
+    type: 'line',
+    data: {
+        labels: labels,
+        datasets: [
+            {
+                label: 'Total Requests',
+                data: requestsData,
+                borderColor: 'lime',
+                fill: false
+            },
+            {
+                label: 'Blocked Attacks',
+                data: attacksData,
+                borderColor: 'red',
+                fill: false
+            }
+        ]
+    },
+    options: {
+        responsive: true,
+        plugins: {
+            legend: { position: 'top' },
+            title: { display: true, text: 'AntiDDoS Metrics Over Time' }
+        },
+        scales: {
+            y: { beginAtZero: true }
+        }
+    }
+});
+
+async function updateDashboard() {
+  const res = await fetch("http://127.0.0.1:8000/metrics");
+  const data = await res.json();
+
+  // Blocked IPs
+  const blockedElem = document.getElementById("blocked");
+  blockedElem.innerHTML = "";
+  data.blocked_ips.forEach(ip => {
+    const li = document.createElement("li");
+    li.textContent = ip;
+    blockedElem.appendChild(li);
+  });
+
+  // Rate-Limited IPs
+  const rateElem = document.getElementById("rate_limited");
+  rateElem.innerHTML = "";
+  data.rate_limited_ips.forEach(ip => {
+    const li = document.createElement("li");
+    li.textContent = ip;
+    rateElem.appendChild(li);
+  });
+
+  // IP Scores
+  const scoresElem = document.getElementById("ip_scores");
+  scoresElem.innerHTML = "";
+  Object.entries(data.ip_scores).forEach(([ip, score]) => {
+    const tr = document.createElement("tr");
+    tr.innerHTML = `<td>${ip}</td><td>${score}</td>`;
+    scoresElem.appendChild(tr);
+  });
+
+  // Metrics برای نمودار
+  const now = new Date().toLocaleTimeString();
+  labels.push(now);
+  requestsData.push(data.total_requests);
+  attacksData.push(data.blocked_ips.length);
+
+  if(labels.length > 20){  // محدود کردن طول نمودار
+    labels.shift();
+    requestsData.shift();
+    attacksData.shift();
+  }
+
+  chart.update();
+}
+
+// بروزرسانی هر 2 ثانیه
+setInterval(updateDashboard, 2000);
+updateDashboard();
+</script>

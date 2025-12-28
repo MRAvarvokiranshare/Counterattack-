@@ -1,0 +1,4 @@
+__pycache__/
+*.pyc
+engine_state.json
+.env
